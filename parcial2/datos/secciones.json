@@ -1,0 +1,62 @@
+[
+    {       
+        "nombre": "home",
+        "titulo": "Bienvenidos",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "formulario",
+        "titulo": "Contactanos",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "nosotros",
+        "titulo": "Sobre nosotros",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "catalogo_completo",
+        "titulo": "Nuestro Catálogo",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "catalogo_x_categoria",
+        "titulo": "Comics",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "producto",
+        "titulo": "Producto",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "resultados",
+        "titulo": "Resultado",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "carrito",
+        "titulo": "Carrito",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "login",
+        "titulo": "Ingresar",
+        "activa": 1,
+        "restringida": 0
+    },
+    {       
+        "nombre": "registro",
+        "titulo": "Ingresar",
+        "activa": 1,
+        "restringida": 0
+    }
+]
