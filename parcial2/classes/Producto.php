@@ -9,11 +9,13 @@ class Producto
     private $destinatario;
     private $imagen;
     private $precio;
+    private $categorias;
 
     public static function catalogo_completo(): array
     {
         $conexion = (new Conexion())->getConexion();
-        $query = "SELECT * FROM producto";
+        $query = "SELECT producto.*, GROUP_CONCAT(pc.categoria_id) as categorias FROM producto LEFT JOIN producto_categoria as pc ON producto.id = pc.producto_id
+        GROUP BY producto.id";
 
         $PDOStatement = $conexion->prepare($query);
         $PDOStatement->setFetchMode(PDO::FETCH_CLASS, self::class);
@@ -58,11 +60,13 @@ class Producto
     public static function get_x_id(int $id): ?Producto
     {
         $conexion = (new Conexion())->getConexion();
-        $query = "SELECT * FROM producto WHERE id = :id";
+        $query = "SELECT producto.*, GROUP_CONCAT(pc.categoria_id) as categorias FROM producto LEFT JOIN producto_categoria as pc ON producto.id = pc.producto_id
+        WHERE producto.id = :producto_id
+        GROUP BY producto.id";
 
         $PDOStatement = $conexion->prepare($query);
         $PDOStatement->setFetchMode(PDO::FETCH_CLASS, self::class);
-        $PDOStatement->execute(["id" => $id]);
+        $PDOStatement->execute(["id_producto" => $id]);
 
         $producto = $PDOStatement->fetch();
 
@@ -84,12 +88,6 @@ class Producto
         $PDOStatement->execute(['categoria_id' => $categoria_id]);
 
         return $PDOStatement->fetchAll();
-    }
-
-
-    public function getCategorias(): array
-    {
-        return Categoria::getPorProducto($this->id);
     }
 
     public static function insert(string $nombre, string $descripcion, string $contenido, string $personalizacion, string $destinatario, string|null $imagen, float $precio)
@@ -152,6 +150,16 @@ class Producto
             'imagen' => $imagen,
             'precio' => $precio,
             'id' => $this->id
+        ]);
+    }
+
+    public static function editarRelacionCategoria($categoria_id, $producto_id){
+        $conexion = (new Conexion())->getConexion();
+        $query = "UPDATE producto_categoria SET categoria_id = :categoria_id WHERE producto_id = :producto_id";
+        $PDOStatement = $conexion->prepare($query);
+        $PDOStatement->execute([
+            'producto_id' => $producto_id,
+            'categoria_id' => $categoria_id
         ]);
     }
 
@@ -254,4 +262,21 @@ class Producto
     {
         $this->precio = $precio;
     }
+
+    /**
+     * Get the value of categorias
+     */ 
+    public function getCategorias()
+    {
+        return $this->categorias;
+    }
+
+    public function getNombreCategoria(){
+        return $this->categorias->getNombre();
+    }
+     public function getIdCategoria(){
+        return $this->categorias->getId();
+    }
+
+
 }

@@ -4,12 +4,9 @@ $id = $_GET['id'] ?? FALSE;
 $producto = Producto::get_x_id($id);
 
 // Traemos todas las categorías
-$categoriaObj = new Categoria();
-$categorias = $categoriaObj->listado_completo();
+$categoria = new Categoria();
+$lista = $categoria->listado_completo();
 
-// Traemos las categorías del producto (N:N)
-$categoriasProducto = Producto::productos_x_categoria($id);
-$categoriasProductoIDs = array_column($categoriasProducto, 'categoria_id'); 
 ?>
 
 <h2 class="mt-4 mb-3">Editar producto</h2>
@@ -27,18 +24,33 @@ $categoriasProductoIDs = array_column($categoriasProducto, 'categoria_id');
 
     <!-- CATEGORÍAS -->
     <div class="mb-3">
-        <label for="categoria" class="form-label">Categoría</label>
-        <select class="form-select" name="categoria_id">
-            <?php foreach ($categorias as $cat) { ?>
-                <option 
-                    value="<?= $cat->getCategoria_id(); ?>"
-                    <?= in_array($cat->getCategoria_id(), $categoriasProductoIDs) ? "selected" : "" ?>
-                >
-                    <?= $cat->getTitulo(); ?>
-                </option>
-            <?php } ?>
+        <label for="categoria_id" class="form-label">Categoría</label>
+        <select class="form-select" aria-label="Elija una categoria" name="categoria_id">
+                <option selected>Seleccione una categoria</option>
+                <?php 
+                foreach ($lista as $categoria) { 
+                ?>
+                <option value="<?= $categoria->getId(); ?>" <?php
+
+                    if ($producto->getCategorias()) {
+                        foreach ($producto->getCategorias() as $producto_categoria){
+                            if ($categoria->getId() == $producto_categoria->getId()) {
+                                echo "selected";
+                            }else{
+                                echo "";
+                            }
+                        }
+                    }
+                    ?>
+                    ><?=  $categoria->getNombre(); ?></option>
+                <?php 
+                } 
+                ?>
         </select>
     </div>
+
+    <input type="checkbox" id="categoria<?= $categoria->getCategoria_id(); ?>" name="categorias[]" value="<?= $categoria->getCategoria_id(); ?>">
+    <label for="categoria<?= $categoria->getCategoria_id(); ?>"><?= $categoria->getNombre(); ?></label>
 
     <!-- DESCRIPCIÓN -->
     <div class="mb-3">

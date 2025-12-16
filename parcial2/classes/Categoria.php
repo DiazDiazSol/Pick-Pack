@@ -61,6 +61,22 @@ class Categoria
         ]);
     }
 
+    public static function getPorProducto(int $producto_id): array
+    {
+        $conexion = (new Conexion())->getConexion();
+
+        $query = "SELECT c.*
+              FROM categoria c
+              JOIN producto_categoria pc ON pc.categoria_id = c.categoria_id
+              WHERE pc.producto_id = :id";
+
+        $PDOStatement = $conexion->prepare($query);
+        $PDOStatement->setFetchMode(PDO::FETCH_CLASS, self::class);
+        $PDOStatement->execute(['id' => $producto_id]);
+
+        return $PDOStatement->fetchAll();
+    }
+
     public function edit(string $nombre, string $titulo)
     {
         $conexion = (new Conexion())->getConexion();
@@ -74,22 +90,6 @@ class Categoria
             "titulo" => $titulo,
             "id"     => $this->categoria_id
         ]);
-    }
-
-    public static function getPorProducto(int $producto_id): array
-    {
-        $conexion = (new Conexion())->getConexion();
-
-        $query = "SELECT c.*
-              FROM categoria c
-              JOIN producto_categoria pc ON pc.categoria_id = c.categoria_id
-              WHERE pc.producto_id = :id";
-
-        $stmt = $conexion->prepare($query);
-        $stmt->setFetchMode(PDO::FETCH_CLASS, self::class);
-        $stmt->execute(['id' => $producto_id]);
-
-        return $stmt->fetchAll();
     }
 
     public function delete()
